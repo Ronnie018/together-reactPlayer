@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect, useReducer } from 'react';
 import StyledAddModal from './styled';
 
 export default function AddModal({ modalToggle }) {
@@ -11,6 +11,17 @@ export default function AddModal({ modalToggle }) {
   function handleSubmit(e) {
     e.preventDefault();
   }
+
+  let running = false;
+  useEffect(() => {
+    try {
+      if (running) return;
+      running = true;
+      // init listen gun here
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
 
   function handleYoutubeChange(e) {
     setFile(() => {
@@ -36,7 +47,6 @@ export default function AddModal({ modalToggle }) {
         data: fileInput.current.files[0],
       };
     });
-
     setNewMaskValue();
   }
 
@@ -54,7 +64,7 @@ export default function AddModal({ modalToggle }) {
         onClick={() => {
           modalToggle((value) => !value);
         }}
-      ></div>
+      />
       <StyledAddModal>
         <form onSubmit={handleSubmit}>
           <div className='input-container'>
@@ -79,7 +89,7 @@ export default function AddModal({ modalToggle }) {
               </select>
             </label>
           </div>
-          <div className='input-container'>
+          <div className='input-container disabled'>
             <span className='text'>Insert the url here</span>
             <label htmlFor='media' className='input-field'>
               <input
