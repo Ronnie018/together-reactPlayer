@@ -55,7 +55,7 @@ const StyledAddSong = styled.div`
   }
 `;
 
-const AddSong = (props) => {
+const AddSong = ({ modalToggle }) => {
   const self = useRef();
 
   function handleMouseMove(e) {
@@ -68,7 +68,12 @@ const AddSong = (props) => {
   return (
     <StyledAddSong onMouseMove={handleMouseMove} ref={self}>
       <div className='text'>Add New Song</div>
-      <div className='add-btn'>
+      <div
+        className='add-btn'
+        onClick={(e) => {
+          modalToggle((value) => !value);
+        }}
+      >
         <GrAdd className='icon' />
       </div>
     </StyledAddSong>
