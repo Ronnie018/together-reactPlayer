@@ -1,6 +1,7 @@
 import { useContext, useRef } from 'react';
-import { SongListContext as context } from '../../../Pages/Main';
+import { SongListContext as context } from '../../../../Pages/Main';
 import StyledControl from './styled';
+
 import {
   IoPlayBackSharp,
   IoPlayForwardSharp,
@@ -11,6 +12,7 @@ const Control = () => {
   const after = useRef();
   const fill = useRef();
   const SongListContext = useContext(context);
+
   function resizeHelper(x) {
     after.current.style.width = `${x}px`;
   }

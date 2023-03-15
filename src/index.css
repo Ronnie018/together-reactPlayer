@@ -142,6 +142,20 @@ table {
   user-select: none;
 }
 
+input:focus,
+input:focus-visible,
+input:focus-within {
+  outline: none;
+  text-indent: 1rem;
+}
+/*
+&:focus,
+&:focus-visible,
+&:focus-within {
+  outline: none;
+  text-indent: 1rem;
+}
+*/
 :root,
 html,
 body,

@@ -1,0 +1,8 @@
+1 - logout button somewhere need to be done // todo
+
+2 - need to add a new page for the user to be able to change his password
+
+3 - need to add a new page for the user to be able to change his email // why another page ? because we need to send a confirmation email to the new email address // we dont need this // we can do it in the same page // exactly
+
+4 - add listener to owner to accept or refuse the requests when; //- PRIORITY -// 
+

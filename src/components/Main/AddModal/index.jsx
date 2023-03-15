@@ -53,14 +53,7 @@ export default function AddModal({ modalToggle }) {
   return (
     <>
       <div
-        style={{
-          content: '',
-          position: 'absolute',
-          backgroundColor: '#15001d48',
-          top: '0',
-          height: '100vh',
-          width: '100vw',
-        }}
+        className='modal-overlay'
         onClick={() => {
           modalToggle((value) => !value);
         }}

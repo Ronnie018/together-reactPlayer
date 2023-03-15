@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import styled from 'styled-components';
-import { SongListContext as context } from '../../Pages/Main';
+import { SongListContext as context } from '../../../Pages/Main';
 import Chat from './Chat';
 import Control from './Control';
 import { SlOptionsVertical } from 'react-icons/all';

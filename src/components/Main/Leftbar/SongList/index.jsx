@@ -2,7 +2,7 @@ import { createContext, useContext, useState } from 'react';
 import styled from 'styled-components';
 import SongTag from '../SongTag';
 import AddSong from '../SongTag/AddSong';
-import { SongListContext as context } from '../../../Pages/Main';
+import { SongListContext as context } from '../../../../Pages/Main';
 import AddModal from '../../AddModal';
 
 const StyledSongList = styled.div`
@@ -19,7 +19,7 @@ const StyledSongList = styled.div`
 `;
 
 const SongList = () => {
-  const [isModalOpen, modalToggle] = useState(true);
+  const [isModalOpen, modalToggle] = useState(false);
   const SongListContext = useContext(context);
 
   return (
