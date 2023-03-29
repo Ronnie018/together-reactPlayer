@@ -21,13 +21,12 @@ export async function createUser(email, password, cb) {
 
 function createUserProfile(id, userObject, cb) {
   try {
-    return profiles
-      .get(id)
-      .put(userObject)
-      .then((ack) => {
-        cb({ email: ack.email, password: ack.password });
-        return ack;
-      });
+    userObject = JSON.stringify(userObject);
+    const vl = profiles.get(id);
+    vl.put(userObject).then((ack) => {
+      cb({ email: ack.email, password: ack.password });
+      return ack;
+    });
   } catch (e) {
     console.log('error in createUserProfile function', e);
     return null;
@@ -53,8 +52,9 @@ function generateNewUserObject(email, password, username) {
     email,
     password,
     images: {
-      bg: null,
-      image: null,
+      bg: 'https://png.pngtree.com/back_origin_pic/04/30/07/0cd60814f462af6e6fca974063286187.jpg',
+      image:
+        'https://th.bing.com/th/id/R.ee0a37e3d5e5fdeba275786941d6e18b?rik=gOyEmFkxvCGcXw&riu=http%3a%2f%2f2.bp.blogspot.com%2f--WIoEY1j4Bs%2fT70vCu4eGDI%2fAAAAAAAAAFc%2fWoKYeBNZamg%2fs1600%2fCirilo-Rivera.jpg&ehk=MXaq1%2fQljtnkfMu9Og8XWkaKEHnIOdFmXKtzbe1wCrQ%3d&risl=&pid=ImgRaw&r=0',
     },
     id: null,
     currentSong: null,
@@ -125,7 +125,7 @@ export async function signIn(email, password, cb) {
         console.log('error', ack.err);
       } else {
         console.log('success', ack);
-        cb({ email, password});
+        cb({ email, password });
       }
     });
   } catch (e) {

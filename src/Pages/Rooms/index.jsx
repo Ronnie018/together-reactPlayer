@@ -3,26 +3,29 @@ import { useContext, useState } from 'react';
 import StyledRooms from './styled';
 import genres from '../../components/Global/genres.json';
 import { ItemTag } from '../../components/Global/Tag';
-import roomsList from './rooms';
+
 import RoomItem from '../../components/Rooms/RoomItem';
 import OpenRoomModal from '../../components/Rooms/OpenRoomModal';
 import CreateRoomModal from '../../components/Rooms/CreateRoomModal';
 import { Navigate } from 'react-router-dom';
 import { AppContext } from '../../App';
+import useRoomsHook from './useRoomsHook';
 
 const Rooms = () => {
-  const {currentUser} = useContext(AppContext);
+  const { currentUser } = useContext(AppContext);
+  
   const [query, setQuery] = useState({
     search_string: '',
     filters: [],
     default: true,
   });
 
-
   const [selection, setSelection] = useState([...Object.keys(genres)]);
   const [selected, setSelected] = useState([]);
 
-  const [rooms, setRooms] = useState(roomsList);
+  const rooms = useRoomsHook(query);
+
+  console.log(rooms);
 
   const [openRoom, setOpenRoom] = useState(null);
   const [createRoom, createRoomToggle] = useState(false);
@@ -85,7 +88,7 @@ const Rooms = () => {
             <div className='rooms'>
               {rooms.map((room, i) => {
                 return (
-                  <RoomItem setOpenRoom={setOpenRoom} children={room} key={i} />
+                  <RoomItem setOpenRoom={setOpenRoom} children={room.room} key={i} />
                 );
               })}
             </div>

@@ -67,10 +67,20 @@ const StyledCreateRoomModal = styled.div`
           position: absolute;
           display: flex;
           flex-direction: column;
-          bottom: -200%;
+          bottom: -100%;
           background-color: #230030;
           font-weight: 300;
           font-family: 'Roboto', sans-serif;
+          &::before {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 10px solid transparent;
+            border-top-color: #230030;
+            background-color: #dddddd;
+          }
         }
       }
     }

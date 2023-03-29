@@ -1,24 +1,28 @@
 import { useRef, useState, useContext } from 'react';
+import useCurrentUserData from '../../Global/useCurrentUserData';
 import ModalHeader from '../ModalHeader';
 import genres from '../../Global/genres.json';
 import { ItemTag } from '../../Global/Tag';
 import StyledCreateRoomModal from './styled';
 import { AppContext } from '../../../App';
-import { rooms } from '../../../gun';
+import gun, { rooms } from '../../../gun';
 import { Navigate } from 'react-router-dom';
+import { profiles } from '../../../gun';
 
 const CreateRoomModal = ({ toggle }) => {
   const [roomCreated, setRoomCreated] = useState(false);
   const { currentUser } = useContext(AppContext);
+  const currentUserData = useCurrentUserData(currentUser);
   const roomNameInput = useRef();
   const passwordInput = useRef();
   const searchInput = useRef();
+  const searchInputOption = useRef();
 
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [keywordList, setKeywordList] = useState([]);
 
   function getMatchedGenres(str) {
-    if (selectedGenres.length === 5) {
+    if (selectedGenres.length === 5 || str === '') {
       setKeywordList(() => []);
       return;
     }
@@ -38,29 +42,31 @@ const CreateRoomModal = ({ toggle }) => {
   }
 
   function handleDropdownClick(e) {
+    if (selectedGenres.length === 5) {
+      return;
+    }
     const { value } = e.target;
-    setSelectedGenres((state) => [...state, value]);
     searchInput.current.value = '';
+    setSelectedGenres((state) => [...state, value]);
     setKeywordList(() => []);
   }
 
   function handleCreateRoom(e) {
     e.preventDefault();
-    const roomName = roomNameInput.current.value;
-    const password = passwordInput.current.value;
-    const room = createRoomObject(
-      roomName,
-      password,
-      selectedGenres,
-      currentUser
-    );
-    const stringfied = {
-      room: JSON.stringify(room),
-    };
-    createRoom(stringfied, room.id, (id) => {
-      saveRoomPasswordInLocalStorage(password);
-      setRoomCreated({ id });
-    });
+    try {
+      const roomName = roomNameInput.current.value;
+      const password = passwordInput.current.value;
+      const room = createRoomObject(roomName, selectedGenres, currentUserData);
+      const stringfied = {
+        room: JSON.stringify(room),
+      };
+      createRoom(stringfied, room.id, (id) => {
+        saveRoomInLocalStorage({ password, id });
+        setRoomCreated({ id });
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   return (
@@ -90,18 +96,18 @@ const CreateRoomModal = ({ toggle }) => {
                 type='text'
                 placeholder='write a genre and click to select'
                 onChange={handleKeywordChange}
+                ref={searchInput}
               />
               <div className='dropdown'>
                 {keywordList.length > 0 &&
                   keywordList.map((keyword) => (
-                    <label htmlFor={keyword}>
+                    <label htmlFor={keyword} key={keyword}>
                       <span>{keyword}</span>
                       <input
                         id={keyword}
                         type='checkbox'
-                        key={keyword}
                         value={keyword}
-                        ref={searchInput}
+                        ref={searchInputOption}
                         style={{
                           display: 'none',
                         }}
@@ -138,26 +144,32 @@ const CreateRoomModal = ({ toggle }) => {
 export default CreateRoomModal;
 
 function createRoomObject(roomName, selectedGenres, owner) {
+  if (!owner || !owner.id || !roomName)
+    throw new Error('mandatory fields missing');
   const room = {
     roomName,
-    selectedGenres: selectedGenres,
+    categories: selectedGenres,
     id: crypto.randomUUID(),
-    owner,
+    owner: {
+      name: owner.username,
+      id: owner.id,
+      image: owner.images.image,
+    },
     users: [],
     messages: [],
     songs: [],
     currentSong: [],
-    verified: false,
+    isPrivate: false,
   };
   return room;
 }
 
 function createRoom(room, id, cb) {
-  console.log('room, is', room);
   rooms.get(id).put(room);
-  cb(id);
+  cb(crypto.randomUUID()); // another id to be used as a secret
 }
 
-function saveRoomPasswordInLocalStorage(password) {
+function saveRoomInLocalStorage({ password, id }) {
   localStorage.setItem('roomPassword', password);
+  localStorage.setItem('roomId', id);
 }

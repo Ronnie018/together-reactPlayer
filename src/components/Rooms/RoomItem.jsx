@@ -125,11 +125,15 @@ import { IoMdLock, IoMdUnlock } from 'react-icons/all';
 import Tag from '../Global/Tag';
 
 const RoomItem = ({ children, setOpenRoom }) => {
-  const { categories, room_name, listening, isPrivate, roomId } = children;
+  children = JSON.parse(children);
+  const { categories, roomName, users, isPrivate, roomId } = children;
+
   const { name, image, id } = children.owner;
 
+  console.log(children);
+
   function handleJoin(e) {
-    setOpenRoom({ id: roomId, name: room_name });
+    setOpenRoom({ id: roomId, name: roomName });
   }
 
   return (
@@ -145,10 +149,10 @@ const RoomItem = ({ children, setOpenRoom }) => {
       <div className='room-info'>
         <div className='top'>
           <div className='room-name'>
-            <span>{room_name}</span>
+            <span>{roomName}</span>
             <div className='meta'>
               <div className='icon'>
-                <div className='people-number'>{listening}</div>
+                <div className='people-number'>{users.length}</div>
               </div>
               <div className='icon'>
                 {isPrivate ? (
@@ -164,11 +168,11 @@ const RoomItem = ({ children, setOpenRoom }) => {
           </button>
         </div>
         <div className='bottom'>
-          {categories.map((category, i) => {
-            return <Tag key={i}>{category}</Tag>;
-          })}
+          {categories &&
+            categories.map((category, i) => {
+              return <Tag key={i}>{category}</Tag>;
+            })}
         </div>
-        
       </div>
     </StyledRoomItem>
   );
